@@ -1,0 +1,27 @@
+.column.q-pa-lg(v-if='isLogin')
+    .row
+        q-card.shadow-24(square='' style='width:300px;height:485px;')
+            q-card-section.bg-deep-purple-7
+                h4.text-h5.text-white.q-my-md Company &amp; Co
+                .absolute-bottom-right.q-pr-md(style='transform: translateY(50%);')
+                    q-btn(fab='' icon='add' color='purple-4')
+            q-card-section
+                q-form.q-px-sm.q-pt-xl
+                    q-input(square='' clearable='' v-model='email' type='email' label='Email')
+                        template(v-slot:prepend='')
+                            q-icon(name='email')
+                    q-input(square='' clearable='' v-model='password' type='password' label='Password')
+                        template(v-slot:prepend='')
+                            q-icon(name='lock')
+            q-card-section
+                .text-center.q-pa-md.q-gutter-md
+                    q-btn(round='' color='indigo-7')
+                        q-icon(name='fab fa-facebook-f' size='1.2rem')
+                    q-btn(round='' color='red-8')
+                        q-icon(name='fab fa-google-plus-g' size='1.2rem')
+                    q-btn(round='' color='light-blue-5')
+                        q-icon(name='fab fa-twitter' size='1.2rem')
+            q-card-actions.q-px-lg
+                q-btn.full-width.text-white(unelevated='' size='lg' color='purple-4' label='Sign In')
+            q-card-section.text-center.q-pa-sm
+                p.text-grey-6 Forgot your password?

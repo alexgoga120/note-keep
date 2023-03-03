@@ -1,0 +1,22 @@
+.column.q-pa-lg(v-else='')
+    .row
+        q-card.shadow-24(square='' style='width:300px;height:485px;')
+            q-card-section.bg-deep-purple-7
+                h4.text-h5.text-white.q-my-md Registration
+                .absolute-bottom-right.q-pr-md(style='transform: translateY(50%);')
+                    q-btn(fab='' icon='close' color='purple-4')
+            q-card-section
+                q-form.q-px-sm.q-pt-xl.q-pb-lg
+                    q-input(square='' clearable='' v-model='email' type='email' label='Email')
+                        template(v-slot:prepend='')
+                            q-icon(name='email')
+                    q-input(square='' clearable='' v-model='username' type='username' label='Username')
+                        template(v-slot:prepend='')
+                            q-icon(name='person')
+                    q-input(square='' clearable='' v-model='password' type='password' label='Password')
+                        template(v-slot:prepend='')
+                            q-icon(name='lock')
+            q-card-actions.q-px-lg
+                q-btn.full-width.text-white(unelevated='' size='lg' color='purple-4' label='Get Started')
+            q-card-section.text-center.q-pa-sm
+                p.text-grey-6 Return to login

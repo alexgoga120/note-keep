@@ -14,5 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('login/login-keep');
+    return redirect()->route('note.login');
 });
+Route::get('/login', function () {
+    return view('login/login-keep');
+})->name('note.login');

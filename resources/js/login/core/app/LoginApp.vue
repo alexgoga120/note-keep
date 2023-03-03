@@ -1,20 +1,8 @@
 <template>
-    <div>
-        <p>aaaa</p>
-        <p>aaaa</p>
-        <p>aaaa</p>
-        <p>aaaa</p>
-        <p>aaaa</p>
-    </div>
+    <LoginBuilder/>
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
-
-const test = ref('hello');
+import LoginBuilder from "../../features/authFeature/application/auth/LoginBuilder.vue";
 
 </script>
-
-<style scoped>
-
-</style>
