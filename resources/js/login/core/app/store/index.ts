@@ -1,14 +1,14 @@
-import { InjectionKey } from "vue";
+import {InjectionKey} from "vue";
 import Vuex from "vuex";
 import {
-    TodoState,
-    TodoStore,
+    LoginState,
+    LoginStore,
 } from "../../../features/authFeature/application/store/loginModule";
-import { createStore, useStore as baseUseStore, Store } from "vuex";
-import { VuexModule, getModule } from "vuex-module-decorators";
-// https://next.vuex.vuejs.org/guide/typescript-support.html#typing-store-property-in-vue-component
+import {createStore, useStore as baseUseStore, Store} from "vuex";
+import {VuexModule, getModule} from "vuex-module-decorators";
+
 export interface RootState {
-    todoModule: TodoState;
+    todoModule: LoginState;
 }
 
 // define injection key
@@ -16,15 +16,16 @@ export const key: InjectionKey<Store<RootState>> = Symbol();
 
 export const store = new Vuex.Store<RootState>({
     modules: {
-        todoModule: TodoStore,
+        todoModule: LoginStore,
     },
 });
 
 function useStore() {
     return baseUseStore(key);
 }
+
 declare type ConstructorOf<C> = {
-    new (...args: any[]): C;
+    new(...args: any[]): C;
 };
 
 export function useModule<M extends VuexModule>(

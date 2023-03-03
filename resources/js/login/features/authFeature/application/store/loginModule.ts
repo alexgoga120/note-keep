@@ -1,67 +1,67 @@
 import {Action, Module, Mutation, VuexModule} from "vuex-module-decorators";
-import {lazyInject} from "../../infrastructure/inversify.config";
+import {lazyInject} from "../../infrastructure/invesify.config";
 
-import Todo from "../../domain/entities/todo";
+import Login from "../../domain/entities/login";
 
 import {Either, Right} from "purify-ts/Either";
 import Failure from "../../../../core/domain/failure";
-import ListTodoUseCase from "../../domain/usecases/listTodoUseCase";
-import CreateTodoUseCase, {
-    CreateTodoUseCaseCommand,
-} from "../../domain/usecases/createTodoUseCase";
-import DeleteTodoUseCase, {
-    DeleteTodoUseCaseCommand,
-} from "../../domain/usecases/deleteTodoUseCase";
-import TYPES from "../../domain/todoTypes";
+import ListLoginUseCase from "../../domain/usecase/listLoginUseCase";
+import CreateLoginUseCase, {
+    CreateLoginUseCaseCommand,
+} from "../../domain/usecase/createLoginUseCase";
+import DeleteLoginUseCase, {
+    DeleteLoginUseCaseCommand,
+} from "../../domain/usecase/deleteLoginUseCase";
+import TYPES from "../../domain/loginTypes";
 import {EmptyUseCaseCommand} from "../../../../core/domain/usecase";
 
-export interface TodoState {
-    todos: Todo[];
+export interface LoginState {
+    logins: Login[];
 }
 
 @Module({
-    name: "todoModule",
+    name: "loginModule",
     namespaced: true,
 })
-export class TodoStore extends VuexModule implements TodoState {
-    @lazyInject(TYPES.ListTodoUseCase)
-    public listUsecase!: ListTodoUseCase;
-    @lazyInject(TYPES.CreateTodoUseCase)
-    public createUsecase!: CreateTodoUseCase;
-    @lazyInject(TYPES.DeleteTodoUseCase)
-    public deleteUsecase!: DeleteTodoUseCase;
+export class LoginStore extends VuexModule implements LoginState {
+    @lazyInject(TYPES.ListLoginUseCase)
+    public listUsecase!: ListLoginUseCase;
+    @lazyInject(TYPES.CreateLoginUseCase)
+    public createUsecase!: CreateLoginUseCase;
+    @lazyInject(TYPES.DeleteLoginUseCase)
+    public deleteUsecase!: DeleteLoginUseCase;
 
-    public todos: Todo[] = [];
+    public logins: Login[] = [];
 
     @Mutation
-    setTodos(items: Todo[]) {
-        this.todos = items;
+    setLogins(items: Login[]) {
+        this.logins = items;
     }
 
     @Action({rawError: true})
-    async fetchTodos(): Promise<Either<Failure, void>> {
+    async fetchLogins(): Promise<Either<Failure, void>> {
         const list = await this.listUsecase.execute(new EmptyUseCaseCommand());
         return list.chain((r) => {
-            this.setTodos(r);
+            this.setLogins(r);
             return Right(undefined);
         });
     }
 
     @Action({rawError: true})
-    async addTodo(todoName: string): Promise<Either<Failure, Todo>> {
-        const createdTodo = await this.createUsecase.execute(
-            new CreateTodoUseCaseCommand(todoName)
+    async addLogin(loginName: string): Promise<Either<Failure, Login>> {
+        const createdLogin = await this.createUsecase.execute(
+            new CreateLoginUseCaseCommand(loginName)
         );
 
-        return createdTodo.chain((r) => {
-            this.todos.push(r);
+        return createdLogin.chain((r) => {
+            this.logins.push(r);
             return Right(r);
         });
     }
 
     @Action({rawError: true})
-    async deleteTodo(id: number) {
-        await this.deleteUsecase.execute(new DeleteTodoUseCaseCommand(id));
-        this.fetchTodos();
+    async deleteLogin(id: number) {
+        await this.deleteUsecase.execute(new DeleteLoginUseCaseCommand(id));
+        await this.fetchLogins();
     }
 }
