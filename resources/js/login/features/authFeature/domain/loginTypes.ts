@@ -1,9 +1,7 @@
 const TYPES = {
-  LoginPort: Symbol("LoginPort"),
-  LoginDataSource: Symbol("LoginDataSource"),
-  CreateLoginUseCase: Symbol("CreateLoginUseCase"),
-  ListLoginUseCase: Symbol("ListLoginUseCase"),
-  DeleteLoginUseCase: Symbol("DeleteLoginUseCase"),
+    LoginPort: Symbol("LoginPort"),
+    LoginDataSource: Symbol("LoginDataSource"),
+    LoginUseCase: Symbol("LoginUseCase")
 };
 
 export default TYPES;

@@ -6,8 +6,9 @@ export default class LoginFailure extends AbstractFailure {
     "Name should not exceed 15 characters." // per localization one should use the key here
   );
 
-  public static readonly emptyName = new LoginFailure(
-    "2",
-    "Name cannot be empty."
-  );
+  public static apiError = (code:string, message:string) => {
+      return new LoginFailure(code,
+          message // per localization one should use the key here
+      )
+  }
 }

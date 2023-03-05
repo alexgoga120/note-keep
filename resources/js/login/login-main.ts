@@ -15,7 +15,7 @@ const myLoginApp = createApp(LoginApp);
 myLoginApp.use(Quasar, {
     plugins: {}, // import Quasar plugins and add here
     lang: quasarLang,
-    iconSet: quasarIconSet
+    iconSet: quasarIconSet,
 })
 
 myLoginApp.use(store, key);

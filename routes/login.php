@@ -19,3 +19,8 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return view('login/login-keep');
 })->name('note.login');
+
+
+Route::get('/note-keep', function () {
+    return view('app/note-keep');
+})->name('app.note-keep');

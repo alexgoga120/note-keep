@@ -1,8 +1,8 @@
 <template>
-    <LoginBuilder/>
+    <AuthBuilder/>
 </template>
 
 <script setup lang="ts">
-import LoginBuilder from "../../features/authFeature/application/auth/LoginBuilder.vue";
+import AuthBuilder from "../../features/authFeature/application/auth/AuthBuilder.vue";
 
 </script>

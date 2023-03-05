@@ -1,8 +1,6 @@
-import { LoginModel } from "../model/loginModel";
+import {LoginModel} from "../model/loginModel";
+import {ApiResponse} from "../../domain/entities/apiResponse";
+
 export interface LoginDatasource {
-  createTodo(todoName: string): Promise<LoginModel>;
-
-  listTodo(): Promise<LoginModel[]>;
-
-  deleteTodo(id: number): Promise<void>;
+    requestLogin(loginData: LoginModel): Promise<Awaited<ApiResponse>>;
 }

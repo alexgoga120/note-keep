@@ -1,9 +1,7 @@
-import Login from "../entities/login";
+import LoginData from "../entities/loginData";
+import {ApiResponse} from "../entities/apiResponse";
 
 export default interface LoginPort {
-  createLogin(todoName: string): Promise<Login>;
+    requestLogin(loginData: LoginData): Promise<Awaited<ApiResponse>>;
 
-  listLogin(): Promise<Login[]>;
-
-  deleteLogin(id: number): Promise<void>;
 }

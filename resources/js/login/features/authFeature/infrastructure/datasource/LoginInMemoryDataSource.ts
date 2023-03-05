@@ -1,27 +1,39 @@
-import { injectable } from "inversify";
-import { LoginModel } from "../model/loginModel";
-import { LoginDatasource } from "./LoginDatasource";
+import {injectable} from "inversify";
+import {LoginModel} from "../model/loginModel";
+import {LoginDatasource} from "./LoginDatasource";
+import {ApiResponse} from "../../domain/entities/apiResponse";
+import {axiosInstance} from "../../../../core/infrastructure/provider";
+import {AxiosResponse} from "axios";
 // ListModel und DetailModel einbauen
 // dataSource (inMemoryAdapter?) checken
 @injectable()
 export class LoginInMemoryDataSource implements LoginDatasource {
-  async createTodo(todoName: string): Promise<LoginModel> {
-    const todos: LoginModel[] = await this.listTodo();
-    const createdTodo: LoginModel = {
-      name: todoName,
-      id: todos.length + 1,
-    };
-    todos.push(createdTodo);
-    localStorage.setItem("todos", JSON.stringify(todos));
-    return Promise.resolve(createdTodo);
-  }
-  listTodo(): Promise<LoginModel[]> {
-    return Promise.resolve(JSON.parse(localStorage.getItem("todos") || "[]"));
-  }
-  async deleteTodo(id: number): Promise<void> {
-    const todos: LoginModel[] = await this.listTodo();
-    const newTodos = todos.filter((todo) => todo.id !== id);
-    localStorage.setItem("todos", JSON.stringify(newTodos));
-    return Promise.resolve();
-  }
+    async requestLogin(loginData: LoginModel): Promise<ApiResponse> {
+        let loginResponse: ApiResponse = await axiosInstance.request({
+            url: '/login',
+            method: "POST"
+        }).then((response: AxiosResponse) => {
+            localStorage.setItem("auth-token", JSON.stringify(response.data.token));
+            return {
+                code: response.status,
+                data: response.data
+            }
+        }).catch(reason => {
+            const code = reason.response.status;
+            const errors = reason.response.data.errors;
+            let error: string = Object.keys(errors).reduce((previousValue, field) => {
+                if (previousValue == '') {
+                    return errors[field].join(", ")
+                }
+                return previousValue + ', ' + errors[field].join(", ")
+            }, '');
+
+
+            return {
+                code,
+                error
+            }
+        })
+        return Promise.resolve(loginResponse);
+    }
 }

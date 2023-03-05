@@ -1,22 +1,19 @@
 import {Action, Module, Mutation, VuexModule} from "vuex-module-decorators";
 import {lazyInject} from "../../infrastructure/invesify.config";
 
-import Login from "../../domain/entities/login";
+import LoginData from "../../domain/entities/loginData";
 
-import {Either, Right} from "purify-ts/Either";
+import {Either, Right, Left} from "purify-ts/Either";
 import Failure from "../../../../core/domain/failure";
-import ListLoginUseCase from "../../domain/usecase/listLoginUseCase";
-import CreateLoginUseCase, {
-    CreateLoginUseCaseCommand,
-} from "../../domain/usecase/createLoginUseCase";
-import DeleteLoginUseCase, {
-    DeleteLoginUseCaseCommand,
-} from "../../domain/usecase/deleteLoginUseCase";
+import LoginUseCase, {
+    LoginUseCaseCommand,
+} from "../../domain/usecase/loginUseCase";
 import TYPES from "../../domain/loginTypes";
-import {EmptyUseCaseCommand} from "../../../../core/domain/usecase";
+import {ApiResponse} from "../../domain/entities/apiResponse";
+import LoginFailure from "../../domain/loginFailure";
 
 export interface LoginState {
-    logins: Login[];
+
 }
 
 @Module({
@@ -24,44 +21,19 @@ export interface LoginState {
     namespaced: true,
 })
 export class LoginStore extends VuexModule implements LoginState {
-    @lazyInject(TYPES.ListLoginUseCase)
-    public listUsecase!: ListLoginUseCase;
-    @lazyInject(TYPES.CreateLoginUseCase)
-    public createUsecase!: CreateLoginUseCase;
-    @lazyInject(TYPES.DeleteLoginUseCase)
-    public deleteUsecase!: DeleteLoginUseCase;
-
-    public logins: Login[] = [];
-
-    @Mutation
-    setLogins(items: Login[]) {
-        this.logins = items;
-    }
+    @lazyInject(TYPES.LoginUseCase)
+    public loginUseCase!: LoginUseCase;
 
     @Action({rawError: true})
-    async fetchLogins(): Promise<Either<Failure, void>> {
-        const list = await this.listUsecase.execute(new EmptyUseCaseCommand());
-        return list.chain((r) => {
-            this.setLogins(r);
-            return Right(undefined);
-        });
-    }
-
-    @Action({rawError: true})
-    async addLogin(loginName: string): Promise<Either<Failure, Login>> {
-        const createdLogin = await this.createUsecase.execute(
-            new CreateLoginUseCaseCommand(loginName)
+    async submitLogin(loginData: LoginData): Promise<Either<Failure, ApiResponse>> {
+        const createdLogin = await this.loginUseCase.execute(
+            new LoginUseCaseCommand(loginData)
         );
-
         return createdLogin.chain((r) => {
-            this.logins.push(r);
+            if (r.code != 200) {
+                return Left(LoginFailure.apiError(r.code.toString(), r.error || ''));
+            }
             return Right(r);
         });
-    }
-
-    @Action({rawError: true})
-    async deleteLogin(id: number) {
-        await this.deleteUsecase.execute(new DeleteLoginUseCaseCommand(id));
-        await this.fetchLogins();
     }
 }

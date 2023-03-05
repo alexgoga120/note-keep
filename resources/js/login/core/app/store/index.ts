@@ -8,7 +8,7 @@ import {createStore, useStore as baseUseStore, Store} from "vuex";
 import {VuexModule, getModule} from "vuex-module-decorators";
 
 export interface RootState {
-    todoModule: LoginState;
+    loginModule: LoginState;
 }
 
 // define injection key
@@ -16,7 +16,7 @@ export const key: InjectionKey<Store<RootState>> = Symbol();
 
 export const store = new Vuex.Store<RootState>({
     modules: {
-        todoModule: LoginStore,
+        loginModule: LoginStore,
     },
 });
 

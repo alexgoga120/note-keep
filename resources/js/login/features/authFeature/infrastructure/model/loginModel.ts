@@ -1,3 +1,3 @@
-import Todo from "../../domain/entities/login";
+import LoginData from "../../domain/entities/loginData";
 
-export interface LoginModel extends Todo {}
+export interface LoginModel extends LoginData {}
