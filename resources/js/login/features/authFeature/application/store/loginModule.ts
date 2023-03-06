@@ -26,6 +26,7 @@ export class LoginStore extends VuexModule implements LoginState {
 
     @Action({rawError: true})
     async submitLogin(loginData: LoginData): Promise<Either<Failure, ApiResponse>> {
+        console.log(loginData)
         const createdLogin = await this.loginUseCase.execute(
             new LoginUseCaseCommand(loginData)
         );

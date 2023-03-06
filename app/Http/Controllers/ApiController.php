@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Requests\LoginDataRequest;
+use App\Http\Requests\NoteCreateDataRequest;
+use App\Models\Note;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class ApiController extends Controller
@@ -19,7 +22,7 @@ class ApiController extends Controller
 
     public function login(LoginDataRequest $request): \Illuminate\Http\JsonResponse
     {
-        $response = ["error" => ""];
+        $response = [];
         try {
             $data = json_decode($request->getContent());
             $user = User::where('email', $data->email)->first();
@@ -43,7 +46,142 @@ class ApiController extends Controller
             return response()->json($response, $code);
         } catch (\Exception $ex) {
             $response["error"] = "Error en servidor, contecte a administradpr";
-            return response(status: 500)->json($response, 500);
+            return response()->json($response, 500);
+        }
+    }
+
+    public function getNotes(): \Illuminate\Http\JsonResponse
+    {
+        $response = [];
+        try {
+            $code = 200;
+            $note = Note::whereFkIdUser(Auth::id())->where('is_archived', false)->get();
+            $response['data'] = $note;
+            return response()->json($response, $code);
+        } catch (\Exception $ex) {
+            $response["error"] = "Error en servidor, contecte a administradpr && " . $ex;
+            return response()->json($response, 500);
+        } catch (\Throwable $e) {
+            $response["error"] = "Error al guardar nota && " . $e;
+            return response()->json($response, 500);
+        }
+    }
+
+    public function getNotesArchived(): \Illuminate\Http\JsonResponse
+    {
+        $response = [];
+        try {
+            $code = 200;
+            $note = Note::whereFkIdUser(Auth::id())->where('is_archived', true)->get();
+            $response['data'] = $note;
+            return response()->json($response, $code);
+        } catch (\Exception $ex) {
+            $response["error"] = "Error en servidor, contecte a administradpr && " . $ex;
+            return response()->json($response, 500);
+        } catch (\Throwable $e) {
+            $response["error"] = "Error al guardar nota && " . $e;
+            return response()->json($response, 500);
+        }
+    }
+
+    public function createNote(NoteCreateDataRequest $request): \Illuminate\Http\JsonResponse
+    {
+        $response = [];
+        try {
+            $note = new Note();
+            $code = 200;
+            $note->fill($request->all());
+            $note->fk_id_user = Auth::id();
+            $note->saveOrFail();
+            $response['data'] = "¡Nota Creada!";
+
+            return response()->json($response, $code);
+        } catch (\Exception $ex) {
+            $response["error"] = "Error en servidor, contecte a administradpr && " . $ex;
+            return response()->json($response, 500);
+        } catch (\Throwable $e) {
+            $response["error"] = "Error al guardar nota && " . $e;
+            return response()->json($response, 500);
+        }
+    }
+
+    public function modifyNote(NoteCreateDataRequest $request, $id): \Illuminate\Http\JsonResponse
+    {
+        $response = [];
+        try {
+            $note = Note::find($id);
+            $code = 200;
+            $note->title = $request->title;
+            $note->body = $request->body;
+            $note->saveOrFail();
+            $response['data'] = "¡Nota Actualizada!";
+
+            return response()->json($response, $code);
+        } catch (\Exception $ex) {
+            $response["error"] = "Error en servidor, contecte a administradpr && " . $ex;
+            return response()->json($response, 500);
+        } catch (\Throwable $e) {
+            $response["error"] = "Error al guardar nota && " . $e;
+            return response()->json($response, 500);
+        }
+    }
+
+    public function pinNote(NoteCreateDataRequest $request, $id): \Illuminate\Http\JsonResponse
+    {
+        $response = [];
+        try {
+            $code = 200;
+            $note = Note::find($id);
+            $note->is_pinned = !$note->is_pinned;
+            $note->saveOrFail();
+            $response['data'] = "¡Nota Archivada!";
+
+            return response()->json($response, $code);
+        } catch (\Exception $ex) {
+            $response["error"] = "Error en servidor, contecte a administradpr && " . $ex;
+            return response()->json($response, 500);
+        } catch (\Throwable $e) {
+            $response["error"] = "Error al guardar nota && " . $e;
+            return response()->json($response, 500);
+        }
+    }
+
+    public function archiveNote($id): \Illuminate\Http\JsonResponse
+    {
+        $response = [];
+        try {
+            $code = 200;
+            $note = Note::find($id);
+            $note->is_archived = !$note->is_archived;
+            $note->saveOrFail();
+            $response['data'] = "¡Nota Archivada!";
+
+            return response()->json($response, $code);
+        } catch (\Exception $ex) {
+            $response["error"] = "Error en servidor, contecte a administradpr && " . $ex;
+            return response()->json($response, 500);
+        } catch (\Throwable $e) {
+            $response["error"] = "Error al guardar nota && " . $e;
+            return response()->json($response, 500);
+        }
+    }
+
+    public function deleteNote($id): \Illuminate\Http\JsonResponse
+    {
+        $response = [];
+        try {
+            $code = 200;
+            $note = Note::find($id);
+            $note->delete();
+            $response['data'] = "¡Nota Borrada!";
+
+            return response()->json($response, $code);
+        } catch (\Exception $ex) {
+            $response["error"] = "Error en servidor, contecte a administradpr && " . $ex;
+            return response()->json($response, 500);
+        } catch (\Throwable $e) {
+            $response["error"] = "Error al guardar nota && " . $e;
+            return response()->json($response, 500);
         }
     }
 

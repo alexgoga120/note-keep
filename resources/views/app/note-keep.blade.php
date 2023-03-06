@@ -7,7 +7,7 @@
     <title>Note keep</title>
 </head>
 <body>
-<div id="app"></div>
+<div id="main_app"></div>
 @vite('resources/js/app/app-main.ts')
 </body>
 </html>

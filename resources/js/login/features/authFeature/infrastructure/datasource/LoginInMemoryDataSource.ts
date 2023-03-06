@@ -11,9 +11,10 @@ export class LoginInMemoryDataSource implements LoginDatasource {
     async requestLogin(loginData: LoginModel): Promise<ApiResponse> {
         let loginResponse: ApiResponse = await axiosInstance.request({
             url: '/login',
-            method: "POST"
+            method: "POST",
+            data: loginData
         }).then((response: AxiosResponse) => {
-            localStorage.setItem("auth-token", JSON.stringify(response.data.token));
+            localStorage.setItem("auth-token", response.data.data.token);
             return {
                 code: response.status,
                 data: response.data

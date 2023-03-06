@@ -3,7 +3,7 @@
     <div class="row">
         <q-card square class="shadow-24 card-size">
             <q-card-section class="bg-yellow-14">
-                <h4 class="text-h5 text-white q-my-md">Note keep</h4>
+                <h4 class="text-h5 text-white q-my-md text-weight-bold">Note keep</h4>
             </q-card-section>
             <q-card-section>
                 <q-form ref="formLogin" class="q-px-sm q-py-xl " :autofocus="true" @submit.stop="loginSubmit">
@@ -33,7 +33,7 @@
                         </template>
                     </q-input>
                     <q-btn unelevated type="submit"
-                           size="lg" color="purple-4"
+                           size="lg" color="dark"
                            class="full-width text-white q-mt-lg"
                            label="Sign In"/>
                 </q-form>

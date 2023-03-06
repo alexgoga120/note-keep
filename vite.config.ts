@@ -14,6 +14,6 @@ export default defineConfig({
         quasar({
             sassVariables: 'resources/css/quasar-variables.sass'
         }),
-        laravel(['resources/js/app/app-main.ts', 'resources/js/auth/auth-main.ts']),
+        laravel(['resources/js/app/app-main.ts', 'resources/js/auth/auth-main.ts', 'resources/css/app.css']),
     ],
 });

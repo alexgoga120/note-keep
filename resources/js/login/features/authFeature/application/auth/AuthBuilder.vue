@@ -26,6 +26,6 @@ const isLogin = ref<boolean>(true);
 <style scoped>
 .gradient-login {
     background: rgb(255, 255, 255);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(254, 239, 195, 1) 100%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(253, 236, 0, 0.7) 100%);
 }
 </style>

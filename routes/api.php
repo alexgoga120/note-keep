@@ -15,9 +15,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+    Route::get('/notes', [ApiController::class, 'getNotes']);
+    Route::get('/notes/archived', [ApiController::class, 'getNotesArchived']);
+
+    Route::delete('/notes/{id}', [ApiController::class, 'deleteNote']);
+//
+    Route::put('/notes/{id}', [ApiController::class, 'modifyNote']);
+    Route::put('/notes/{id}/pin', [ApiController::class, 'modifyNote']);
+
+    Route::post('/notes', [ApiController::class, 'createNote']);
+    Route::post('/notes/{id}/archived', [ApiController::class, 'archiveNote']);
 });
 
-Route::get('/users',[ApiController::class,'users']);
+Route::get('/users', [ApiController::class, 'users']);
 Route::post('/login', [ApiController::class, 'login']);
