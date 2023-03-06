@@ -14,4 +14,6 @@ export interface NoteDatasource {
     deleteNote(id: number): Promise<ApiResponse>;
 
     archiveNote(id: number): Promise<ApiResponse>;
+
+    pinNote(id: number): Promise<ApiResponse>;
 }

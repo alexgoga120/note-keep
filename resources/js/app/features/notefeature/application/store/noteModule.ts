@@ -19,6 +19,7 @@ import LoginFailure from "../../../../../login/features/authFeature/domain/login
 import ArchiveNoteUseCase, {ArchiveNoteUseCaseCommand} from "../../domain/usecase/archiveNoteUseCase";
 import ListArchivedNoteUseCase from "../../domain/usecase/listArchivedNoteUseCase";
 import ModifyNoteUseCase, {ModifyNoteUseCaseCommand} from "../../domain/usecase/modifyNoteUseCase";
+import PinNoteUseCase, {PinNoteUseCaseCommand} from "../../domain/usecase/pinNoteUseCase";
 
 export interface NoteState {
     notes: Note[];
@@ -41,6 +42,8 @@ export class NoteStore extends VuexModule implements NoteState {
     public deleteUsecase!: DeleteNoteUseCase;
     @lazyInject(TYPES.ArchiveNoteUseCase)
     public archiveUsecase!: ArchiveNoteUseCase;
+    @lazyInject(TYPES.PinNoteUseCase)
+    public pinUsecase!: PinNoteUseCase;
 
     public notes: Note[] = [];
     public archivedNotes: Note[] = [];
@@ -113,6 +116,13 @@ export class NoteStore extends VuexModule implements NoteState {
     @Action({rawError: true})
     async archiveNote(id: number) {
         await this.archiveUsecase.execute(new ArchiveNoteUseCaseCommand(id));
+        await this.fetchNotes();
+        await this.fetchArchiveNotes();
+    }
+
+    @Action({rawError: true})
+    async pinNote(id: number) {
+        await this.pinUsecase.execute(new PinNoteUseCaseCommand(id));
         await this.fetchNotes();
         await this.fetchArchiveNotes();
     }

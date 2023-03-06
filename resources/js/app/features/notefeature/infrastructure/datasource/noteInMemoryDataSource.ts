@@ -136,4 +136,25 @@ export class NoteInMemoryDataSource implements NoteDatasource {
 
         return Promise.resolve(notesArchived);
     }
+
+    async pinNote(id: number): Promise<ApiResponse> {
+        let notesArchived: ApiResponse = await axiosInstance.request({
+            url: `/notes/${id}/pin`,
+            method: "POST"
+        }).then((response: AxiosResponse) => {
+            return {
+                code: response.status,
+                data: response.data
+            }
+        }).catch(reason => {
+            const code = reason.response.status;
+            const error = 'error';
+            return {
+                code,
+                error
+            }
+        })
+
+        return Promise.resolve(notesArchived);
+    }
 }

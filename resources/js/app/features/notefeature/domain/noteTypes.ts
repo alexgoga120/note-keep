@@ -7,6 +7,7 @@ const TYPES = {
     ListArchivedNoteUseCase: Symbol("ListArchivedNoteUseCase"),
     DeleteNoteUseCase: Symbol("DeleteNoteUseCase"),
     ArchiveNoteUseCase: Symbol("ArchiveNoteUseCase"),
+    PinNoteUseCase: Symbol("PinNoteUseCase"),
 };
 
 export default TYPES;

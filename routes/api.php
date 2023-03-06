@@ -25,10 +25,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/notes/{id}', [ApiController::class, 'deleteNote']);
 //
     Route::put('/notes/{id}', [ApiController::class, 'modifyNote']);
-    Route::put('/notes/{id}/pin', [ApiController::class, 'modifyNote']);
 
     Route::post('/notes', [ApiController::class, 'createNote']);
     Route::post('/notes/{id}/archived', [ApiController::class, 'archiveNote']);
+    Route::post('/notes/{id}/pin', [ApiController::class, 'pinNote']);
 });
 
 Route::get('/users', [ApiController::class, 'users']);

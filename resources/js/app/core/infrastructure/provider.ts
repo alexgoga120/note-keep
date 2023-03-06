@@ -1,6 +1,6 @@
 import axios, {AxiosInstance} from "axios";
 
-export const axiosInstance: AxiosInstance = axios.create({
+const instanceBuilder: AxiosInstance = axios.create({
     withCredentials: true,
     baseURL: 'http://127.0.0.1:8000/api/v1',
     headers: {
@@ -8,4 +8,14 @@ export const axiosInstance: AxiosInstance = axios.create({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('auth-token')}`
     }
-})
+});
+
+instanceBuilder.interceptors.response.use((response) => response, (error) => {
+    if (error.response.status === 401) {
+        window.location.href = "/login"
+    }
+    throw error;
+});
+
+
+export const axiosInstance: AxiosInstance = instanceBuilder;

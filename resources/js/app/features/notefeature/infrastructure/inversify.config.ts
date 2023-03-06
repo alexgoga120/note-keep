@@ -16,6 +16,7 @@ import NotePort from "../domain/ports/notePort";
 import ArchiveNoteUseCase, {ArchiveNoteUseCaseImpl} from "../domain/usecase/archiveNoteUseCase";
 import ListArchivedNoteUseCase, {ListArchivedNoteUseCaseImpl} from "../domain/usecase/listArchivedNoteUseCase";
 import ModifyNoteUseCase, {ModifyNoteUseCaseImpl} from "../domain/usecase/modifyNoteUseCase";
+import PinNoteUseCase, {PinNoteUseCaseImpl} from "../domain/usecase/pinNoteUseCase";
 
 const container = new Container();
 container.bind<NotePort>(TYPES.NotePort).to(NoteAdapter);
@@ -35,5 +36,8 @@ container
 container
     .bind<ArchiveNoteUseCase>(TYPES.ArchiveNoteUseCase)
     .to(ArchiveNoteUseCaseImpl);
+container
+    .bind<PinNoteUseCase>(TYPES.PinNoteUseCase)
+    .to(PinNoteUseCaseImpl);
 const {lazyInject} = getDecorators(container);
 export {lazyInject, container};

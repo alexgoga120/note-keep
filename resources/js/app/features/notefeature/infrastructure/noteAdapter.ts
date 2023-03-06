@@ -38,4 +38,8 @@ export default class NoteAdapter implements NotePort {
     async archiveNote(id: number): Promise<ApiResponse> {
         return this.noteDataSource.archiveNote(id);
     }
+
+    async pinNote(id: number): Promise<ApiResponse> {
+        return this.noteDataSource.pinNote(id);
+    }
 }

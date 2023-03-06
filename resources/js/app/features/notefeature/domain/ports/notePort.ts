@@ -13,4 +13,5 @@ export default interface NotePort {
     deleteNote(id: number): Promise<ApiResponse>;
 
     archiveNote(id: number): Promise<ApiResponse>;
+    pinNote(id: number): Promise<ApiResponse>;
 }

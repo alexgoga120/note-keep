@@ -17,6 +17,9 @@
                    icon="more_vert">
                 <q-menu auto-close>
                     <q-list>
+                        <q-item clickable dense @click="pinNote">
+                            <q-item-section class="text-red">Fijar</q-item-section>
+                        </q-item>
                         <q-item clickable dense @click="archiveNote">
                             <q-item-section class="text-primary">{{
                                     props.noteData.is_archived ? 'Desarchivar' : 'Archivar'
@@ -62,6 +65,12 @@ const deleteNote = async () => {
 }
 
 const archiveNote = async () => {
+
+    const result = await noteStore.archiveNote(props.noteData.id!);
+    console.log(result)
+}
+
+const pinNote = async () => {
 
     const result = await noteStore.archiveNote(props.noteData.id!);
     console.log(result)
