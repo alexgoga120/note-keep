@@ -33,3 +33,4 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::get('/users', [ApiController::class, 'users']);
 Route::post('/login', [ApiController::class, 'login']);
+Route::post('/signin', [ApiController::class, 'signin']);

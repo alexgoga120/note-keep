@@ -23,7 +23,7 @@ export class PinNoteUseCaseImpl implements PinNoteUseCase {
     async execute(
         command: PinNoteUseCaseCommand
     ): Promise<Either<failure, void>> {
-        await this._notePort.archiveNote(command.id);
+        await this._notePort.pinNote(command.id);
         return Right(undefined);
     }
 }

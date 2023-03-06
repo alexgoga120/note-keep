@@ -6,6 +6,7 @@ import LoginData from "../domain/entities/loginData";
 import {axiosInstance} from "../../../core/infrastructure/provider";
 import {AxiosResponse} from "axios";
 import {ApiResponse} from "../domain/entities/apiResponse";
+import SigninData from "../domain/entities/signinData";
 
 @injectable()
 export default class LoginAdapter implements LoginPort {
@@ -20,5 +21,9 @@ export default class LoginAdapter implements LoginPort {
 
     async requestLogin(loginData: LoginData): Promise<ApiResponse> {
         return await this.loginDataSource.requestLogin(loginData);
+    }
+
+    async requestSignin(loginData: SigninData): Promise<ApiResponse> {
+        return await this.loginDataSource.requestSignin(loginData);
     }
 }

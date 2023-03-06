@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginDataRequest;
 use App\Http\Requests\NoteCreateDataRequest;
+use App\Http\Requests\SigninDataRequest;
 use App\Models\Note;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -29,7 +30,7 @@ class ApiController extends Controller
             $code = 200;
             if ($user) {
                 if (Hash::check($data->password, $user->password)) {
-                    $token = $user->createToken("example");
+                    $token = $user->createToken("login_token");
                     $response["status"] = 200;
                     $response["data"]["token"] = $token->plainTextToken;
 
@@ -50,12 +51,31 @@ class ApiController extends Controller
         }
     }
 
+    public function signin(SigninDataRequest $request): \Illuminate\Http\JsonResponse
+    {
+        $response = [];
+        try {
+            $user = new User();
+            $code = 200;
+            $user->fill($request->all());
+            $user->saveOrFail();
+            $token = $user->createToken("login_token");
+            $response["status"] = 200;
+            $response["data"]["token"] = $token->plainTextToken;
+
+            return response()->json($response, $code);
+        } catch (\Exception $ex) {
+            $response["error"] = "Error en servidor, contecte a administradpr";
+            return response()->json($response, 500);
+        }
+    }
+
     public function getNotes(): \Illuminate\Http\JsonResponse
     {
         $response = [];
         try {
             $code = 200;
-            $note = Note::whereFkIdUser(Auth::id())->where('is_archived', false)->get();
+            $note = Note::whereFkIdUser(Auth::id())->where('is_archived', false)->orderByDesc('is_pinned')->get();
             $response['data'] = $note;
             return response()->json($response, $code);
         } catch (\Exception $ex) {

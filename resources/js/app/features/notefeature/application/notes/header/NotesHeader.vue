@@ -10,6 +10,11 @@
                 </q-avatar>
                 Note Keep
             </q-toolbar-title>
+            <q-btn round flat @click="logout"
+                   size="lg"
+                   color="red"
+                   icon="logout">
+            </q-btn>
         </q-toolbar>
     </q-header>
 
@@ -20,6 +25,11 @@
 const emit = defineEmits(['toggleDrawer']);
 
 const toggleDrawer = () => emit('toggleDrawer')
+
+const logout = () => {
+    localStorage.removeItem('auth-token')
+    window.location.href = "/login"
+}
 
 </script>
 

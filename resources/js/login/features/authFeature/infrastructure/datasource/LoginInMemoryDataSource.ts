@@ -4,6 +4,7 @@ import {LoginDatasource} from "./LoginDatasource";
 import {ApiResponse} from "../../domain/entities/apiResponse";
 import {axiosInstance} from "../../../../core/infrastructure/provider";
 import {AxiosResponse} from "axios";
+import SigninData from "../../domain/entities/signinData";
 // ListModel und DetailModel einbauen
 // dataSource (inMemoryAdapter?) checken
 @injectable()
@@ -36,5 +37,36 @@ export class LoginInMemoryDataSource implements LoginDatasource {
             }
         })
         return Promise.resolve(loginResponse);
+    }
+
+    async requestSignin(signinData: SigninData): Promise<ApiResponse> {
+        debugger
+        let signinResponse: ApiResponse = await axiosInstance.request({
+            url: '/signin',
+            method: "POST",
+            data: signinData
+        }).then((response: AxiosResponse) => {
+            localStorage.setItem("auth-token", response.data.data.token);
+            return {
+                code: response.status,
+                data: response.data
+            }
+        }).catch(reason => {
+            const code = reason.response.status;
+            const errors = reason.response.data.errors;
+            let error: string = Object.keys(errors).reduce((previousValue, field) => {
+                if (previousValue == '') {
+                    return errors[field].join(", ")
+                }
+                return previousValue + ', ' + errors[field].join(", ")
+            }, '');
+
+
+            return {
+                code,
+                error
+            }
+        })
+        return Promise.resolve(signinResponse);
     }
 }

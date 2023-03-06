@@ -3,10 +3,10 @@
     <div class="row">
         <q-card square class="shadow-24 card-size">
             <q-card-section class="bg-yellow-14">
-                <h4 class="text-h5 text-white q-my-md text-weight-bold">Note keep</h4>
+                <span class="text-h5 text-white q-my-md text-weight-bold inset">Note keep - Login</span>
             </q-card-section>
             <q-card-section>
-                <q-form ref="formLogin" class="q-px-sm q-py-xl " :autofocus="true" @submit.stop="loginSubmit">
+                <q-form ref="formLogin" class="q-px-sm q-pt-xl " :autofocus="true" @submit.stop="loginSubmit">
                     <q-input square clearable
                              v-model="loginData.email"
                              bottom-slots
@@ -23,7 +23,7 @@
                     <q-input square clearable
                              v-model="loginData.password"
                              bottom-slots
-                             type="password" label="Password"
+                             type="password" label="Contraseña"
                              hint="Contraseña"
                              :error-message="errorMessage(v$.password.$path)"
                              :error="v$.password.$invalid"
@@ -35,12 +35,16 @@
                     <q-btn unelevated type="submit"
                            size="lg" color="dark"
                            class="full-width text-white q-mt-lg"
-                           label="Sign In"/>
+                           label="Inicio de Sesión"/>
                 </q-form>
             </q-card-section>
-            <q-card-section class="text-center q-pa-sm">
-                <p class="text-grey-6">Forgot your password?</p>
-            </q-card-section>
+            <q-card-actions align="center">
+                <q-btn @click="toggleLogin = false"
+                       color="warning"
+                >
+                    Crear Cuenta
+                </q-btn>
+            </q-card-actions>
         </q-card>
 
         <InfoDialog v-model="show" :msg="msg" :is-error="isError"/>
@@ -50,7 +54,7 @@
 
 <script setup lang="ts">
 
-import {reactive, ref} from "vue";
+import {computed, reactive, ref} from "vue";
 
 import useValidator from './composable/use-vuelidate';
 import {LoginStore} from "../../store/loginModule";
@@ -74,6 +78,19 @@ const show = ref<boolean>(false);
 const isError = ref<boolean>(false);
 const msg = ref<string>('');
 
+interface Props {
+    modelValue: boolean;
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits(['update:modelValue'])
+
+const toggleLogin = computed({
+    get: () => props.modelValue,
+    set: (value) => emit('update:modelValue', value)
+})
+
+
 const loginSubmit = async (formData: FormDataEvent) => {
     if (!v$.value.$error) {
         const result = await loginStore.submitLogin(loginData);
@@ -85,6 +102,7 @@ const loginSubmit = async (formData: FormDataEvent) => {
             },
             (_) => {
                 v$.value.$reset()
+                window.location.href = "/note-keep"
             }
         );
     }
@@ -106,7 +124,4 @@ const errorMessage = (field: string) => {
 </script>
 
 <style scoped>
-.card-size {
-    min-width: 450px;
-}
 </style>

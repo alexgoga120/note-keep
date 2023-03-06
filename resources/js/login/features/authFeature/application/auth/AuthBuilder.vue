@@ -5,10 +5,10 @@
                 class="window-height window-width row justify-center items-center gradient-login"
             >
                 <div v-if="isLogin" class="column q-pa-lg">
-                    <LoginForm/>
+                    <LoginForm v-model="isLogin"/>
                 </div>
                 <div v-else class="column q-pa-lg">
-                    <SigninForm/>
+                    <SigninForm v-model="isLogin"/>
                 </div>
             </q-page>
         </q-page-container>
@@ -27,5 +27,10 @@ const isLogin = ref<boolean>(true);
 .gradient-login {
     background: rgb(255, 255, 255);
     background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(253, 236, 0, 0.7) 100%);
+}
+</style>
+<style>
+.card-size {
+    min-width: 450px;
 }
 </style>

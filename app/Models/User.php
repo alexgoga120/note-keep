@@ -7,8 +7,10 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * Class User
@@ -20,9 +22,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property Collection|Note[] $notes
  * @package App\Models
- * @property-read int|null $notes_count
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
+ * @property-read int|null $tokens_count
+ * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User query()
@@ -33,11 +38,15 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Note> $notes
+ * @property-read int|null $notes_count
  * @mixin \Eloquent
  */
-class User extends Model
+class User extends Authenticatable
 {
-	protected $table = 'users';
+    use HasApiTokens, HasFactory, Notifiable;
+
+    protected $table = 'users';
 
 	protected $hidden = [
 		'password',
@@ -47,8 +56,7 @@ class User extends Model
 	protected $fillable = [
 		'name',
 		'email',
-		'password',
-		'remember_token'
+		'password'
 	];
 
 	public function notes()

@@ -1,45 +1,149 @@
 <template>
 
     <div class="row">
-        <q-card square class="shadow-24" style="width:300px;height:485px;">
-            <q-card-section class="bg-deep-purple-7">
-                <h4 class="text-h5 text-white q-my-md">Registration</h4>
-                <div class="absolute-bottom-right q-pr-md" style="transform: translateY(50%);">
-                    <q-btn fab icon="close" color="purple-4"/>
-                </div>
+        <q-card square class="shadow-24 card-size">
+            <q-card-section class="bg-yellow-14">
+                <h4 class="text-h5 text-white q-my-md text-weight-bold">Note keep - Registro</h4>
             </q-card-section>
             <q-card-section>
-                <q-form class="q-px-sm q-pt-xl q-pb-lg">
-                    <q-input square clearable v-model="email" type="email" label="Email">
-                        <template v-slot:prepend>
-                            <q-icon name="email"/>
-                        </template>
-                    </q-input>
-                    <q-input square clearable v-model="username" type="username" label="Username">
+                <q-form ref="formSignin" class="q-px-sm q-pt-xl "
+                        :autofocus="true"
+                        @submit.stop="signinSubmit"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        autocomplete="off"
+                        :spellcheck="false"
+                >
+                    <q-input square clearable
+                             v-model="signinData.name"
+                             bottom-slots
+                             type="text" label="Nombre"
+                             lazy-rules
+                             hint="Correo electronico"
+                             :error-message="errorMessage(v$.name.$path)"
+                             :error="v$.name.$invalid"
+                    >
                         <template v-slot:prepend>
                             <q-icon name="person"/>
                         </template>
                     </q-input>
-                    <q-input square clearable v-model="password" type="password" label="Password">
+                    <q-input square clearable
+                             v-model="signinData.email"
+                             bottom-slots
+                             type="email" label="Email"
+                             lazy-rules
+                             hint="Correo electronico"
+                             :error-message="errorMessage(v$.email.$path)"
+                             :error="v$.email.$invalid"
+                    >
+                        <template v-slot:prepend>
+                            <q-icon name="email"/>
+                        </template>
+                    </q-input>
+                    <q-input square clearable
+                             v-model="signinData.password"
+                             bottom-slots
+                             type="password" label="Contraseña"
+                             hint="Contraseña"
+                             :error-message="errorMessage(v$.password.$path)"
+                             :error="v$.password.$invalid"
+                    >
                         <template v-slot:prepend>
                             <q-icon name="lock"/>
                         </template>
                     </q-input>
+                    <q-btn unelevated type="submit"
+                           size="lg" color="dark"
+                           class="full-width text-white q-mt-lg"
+                           label="Sign In"/>
                 </q-form>
             </q-card-section>
-            <q-card-actions class="q-px-lg">
-                <q-btn unelevated size="lg" color="purple-4" class="full-width text-white"
-                       label="Get Started"/>
+            <q-card-actions align="center">
+                <q-btn @click="toggleSignin = true"
+                       color="warning"
+                >
+                    Inicio de sesión
+                </q-btn>
             </q-card-actions>
-            <q-card-section class="text-center q-pa-sm">
-                <p class="text-grey-6">Return to login</p>
-            </q-card-section>
         </q-card>
+
+        <InfoDialog v-model="show" :msg="msg" :is-error="isError"/>
     </div>
 
 </template>
 
 <script setup lang="ts">
+
+import {computed, reactive, ref} from "vue";
+
+import useValidator from './composable/use-vuelidate';
+import {LoginStore} from "../../store/loginModule";
+import {useModule} from "../../../../../core/app/store";
+import {QForm} from "quasar";
+import InfoDialog from "../../commons/InfoDialog.vue";
+
+const signinStore: LoginStore = useModule(LoginStore);
+
+const signinData = reactive({
+    name: '',
+    email: '',
+    password: ''
+})
+
+const {v$} = useValidator(signinData);
+
+const formSignin = ref<QForm | null>(null);
+
+const show = ref<boolean>(false);
+const isError = ref<boolean>(false);
+const msg = ref<string>('');
+
+interface Props {
+    modelValue: boolean;
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits(['update:modelValue'])
+
+const toggleSignin = computed({
+    get: () => props.modelValue,
+    set: (value) => emit('update:modelValue', value)
+})
+
+
+const signinSubmit = async (formData: FormDataEvent) => {
+    if (!v$.value.$error) {
+        const result = await signinStore.submitSignin(signinData);
+        result.either(
+            (l) => {
+                show.value = true;
+                msg.value = l.getMessage();
+                isError.value = true;
+            },
+            (_) => {
+                v$.value.$reset()
+                window.location.href = "/note-keep"
+            }
+        );
+    }
+}
+
+const errorMessage = (field: string) => {
+    const fieldCheck = v$.value[field];
+    if (field === 'email') {
+        if (fieldCheck.email.$invalid) return 'Debe ser un email'
+        if (fieldCheck.required.$invalid) return 'Campo requerido'
+    }
+    if (field === 'username') {
+        if (fieldCheck.maxLength.$invalid) return 'Tamaño máximo de 15'
+        if (fieldCheck.required.$invalid) return 'Campo requerido'
+    }
+    if (field === 'password') {
+        if (fieldCheck.maxLength.$invalid) return 'Tamaño máximo de 15'
+        if (fieldCheck.required.$invalid) return 'Campo requerido'
+    }
+    return ''
+}
 
 </script>
 

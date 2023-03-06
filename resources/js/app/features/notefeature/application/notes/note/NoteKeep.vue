@@ -3,22 +3,27 @@
         <q-card-section v-if="props.noteData.title"
                         style="cursor: pointer"
                         @click="dialog=true">
-            <span class="text-weight-bold">
+            <p class="text-weight-bold text-no-wrap" style="text-overflow: ellipsis; overflow: hidden;">
                 {{ props.noteData.title }}
-            </span>
+            </p>
         </q-card-section>
         <q-card-section style="max-height: 200px; cursor: pointer" class="scroll" @click="dialog=true">
             <span v-html="props.noteData.body" style="white-space: pre-line">
             </span>
         </q-card-section>
-        <q-card-actions class="justify-end">
+        <q-card-actions class="justify-between">
+            <q-btn round flat @click="pinNote"
+                   :color=" props.noteData.is_pinned ? 'primary' : '' "
+                   size="sm"
+                   icon="push_pin">
+            </q-btn>
             <q-btn round flat
                    size="sm"
                    icon="more_vert">
                 <q-menu auto-close>
                     <q-list>
                         <q-item clickable dense @click="pinNote">
-                            <q-item-section class="text-red">Fijar</q-item-section>
+                            <q-item-section>Fijar</q-item-section>
                         </q-item>
                         <q-item clickable dense @click="archiveNote">
                             <q-item-section class="text-primary">{{
@@ -72,7 +77,7 @@ const archiveNote = async () => {
 
 const pinNote = async () => {
 
-    const result = await noteStore.archiveNote(props.noteData.id!);
+    const result = await noteStore.pinNote(props.noteData.id!);
     console.log(result)
 }
 
